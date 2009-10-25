@@ -87,9 +87,9 @@ module Turtle
       a.join
     end
 
-    def self.build(out=STDOUT, ext=nil, &block)
+    def self.build(out=STDOUT, extension=nil, &block)
       builder = new out
-      builder.extend ext if ext
+      builder.extend ext if extension
       builder.instance_eval &block
     end
 
