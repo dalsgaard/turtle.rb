@@ -6,6 +6,7 @@ module Turtle
     
     def initialize(out)
       @out = out
+      @state = :object
     end
 
     def base(uri)
@@ -16,29 +17,43 @@ module Turtle
       @out.puts "@prefix #{prefix}: <#{namespace}> ."
     end
 
-    def triple(s, p, o)
-      @out.print "#{resolve s} #{resolve p} #{resolve o}"
+    def triple(s, p=nil, o=nil)
+      @out.print "#{resolve s}"
+      if p
+        @out.print " #{resolve p}"
+        if o
+          @out.print " #{resolve o}"
+          @state = :object
+        else
+          @state = :predicate
+        end
+      else
+        @state = :subject
+      end
       yield if block_given?
       @out.puts " ."
     end
 
-    def predicate(p, o)
-      @out.print ";\n  #{resolve p} #{resolve o}"
+    def predicate(p, o=nil)
+      if @state == :object 
+        @out.print " ;"
+      end
+      @out.print "\n  #{resolve p}"
+      if o
+        @out.print " #{resolve o}"
+        @state = :object
+      else
+        @state = :predicate
+      end
+      yield if block_given?
     end
 
     def object(o)
-      @out.print ",\n  #{resolve o}"
-    end
-
-    def triples(s, p, os)
-      @out.print "#{resolve s} #{resolve p} "
-      if os.first.is_a? Symbol
-        ns = os.first.to_s
-        @out.print (os.last.map {|n| "#{ns}:#{n}"}).join(", ")
-      else
-        @out.print (os.map {|o| resolve o}).join(", ")
+      if @state == :object
+        @out.print " ,"
       end
-      @out.puts " ."      
+      @out.print "\n    #{resolve o}"
+      @state = :object
     end
 
     alias t triple
