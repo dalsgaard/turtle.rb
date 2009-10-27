@@ -17,7 +17,7 @@ module Turtle
       @out.puts "@prefix #{prefix}: <#{namespace}> ."
     end
 
-    def triple(s, p=nil, o=nil)
+    def subject(s, p=nil, o=nil)
       @out.print "#{resolve s}"
       if p
         @out.print " #{resolve p}"
@@ -56,7 +56,7 @@ module Turtle
       @state = :object
     end
 
-    alias t triple
+    alias s subject
     alias p predicate
     alias o object
 
