@@ -69,11 +69,21 @@ module Turtle
       @state = :object
     end
 
+    def comment(text)
+      @out.print "# #{text}\n"
+    end
+
+    def newline
+      @out.print "\n"
+    end
+
     alias s subject
     alias p predicate
     alias o object
     alias triple subject
     alias t subject
+    alias c comment
+    alias nl newline
 
     def xsd_datatype(datatype)
       if @xsd
