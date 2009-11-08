@@ -86,12 +86,19 @@ module Turtle
     def resolve(e)
       case e
       when Array
-        first, last = e
-        case first
-        when Symbol
-          "#{first}:#{last}"
-        when String
-          "\"#{first}\"^^#{xsd_datatype last}"
+        case e.size
+        when 0
+          ":"
+        when 1
+          ":#{e.first}"
+        else
+          first, last = e
+          case first
+          when Symbol
+            "#{first}:#{last}"
+          when String
+            "\"#{first}\"^^#{xsd_datatype last}"
+          end
         end
       when :a
         "a"
