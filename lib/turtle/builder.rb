@@ -7,14 +7,23 @@ module Turtle
     def initialize(out)
       @out = out
       @state = :object
+      @xsd = nil
     end
 
     def base(uri)
       @out.puts "@base <#{uri}> ."
     end
 
-    def prefix(prefix, namespace)
-      @out.puts "@prefix #{prefix}: <#{namespace}> ."
+    def prefix(prefix, namespace=nil)
+      if namespace
+        @out.puts "@prefix #{prefix}: <#{namespace}> ."
+        @xsd = prefix if namespace == "http://www.w3.org/2001/XMLSchema#"
+      else
+        case prefix
+        when :xsd
+          prefix(:xsd, "http://www.w3.org/2001/XMLSchema#")
+        end
+      end
     end
 
     def subject(s, p=nil, o=nil)
@@ -60,15 +69,34 @@ module Turtle
     alias p predicate
     alias o object
 
+    def xsd_datatype(datatype)
+      if @xsd
+        "#{@xsd}:#{datatype}"
+      else
+        "<http://www.w3.org/2001/XMLSchema##{datatype}>"
+      end
+    end
+
     def resolve(e)
       case e
       when Array
-        ns, n = e
-        "#{ns}:#{n}"
+        first, last = e
+        case first
+        when Symbol
+          "#{first}:#{last}"
+        when String
+          "\"#{first}\"^^#{xsd_datatype last}"
+        end
       when :a
         "a"
       when String
         "\"#{encode(e)}\""
+      when Fixnum
+        "\"#{e}\"^^#{xsd_datatype :integer}"
+      when Float
+        "\"#{e}\"^^#{xsd_datatype :double}"
+      when true, false
+        "\"#{e}\"^^#{xsd_datatype :boolean}"
       else
         e
       end
