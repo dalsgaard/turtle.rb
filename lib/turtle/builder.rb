@@ -72,6 +72,8 @@ module Turtle
     alias s subject
     alias p predicate
     alias o object
+    alias triple subject
+    alias t subject
 
     def xsd_datatype(datatype)
       if @xsd
