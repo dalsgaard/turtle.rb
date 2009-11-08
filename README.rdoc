@@ -3,3 +3,21 @@
 turtle.rb is a internal Ruby DSL for quickly generating RDF in the
 turtle format.
 
+== Examples
+
+The following simple document
+
+  Turtle.build do
+
+    prefix :docs, "http://kimdalsgaard.com/documents/"
+    prefix :dc, "http://purl.org/dc/elements/1.1/"
+    
+    subject [:docs, "foo"], [:dc, "title"], "Foo"
+
+  end
+
+will produce the following result
+
+  @prefix docs: <http://kimdalsgaard.com/documents/> .
+  @prefix dc: <http://purl.org/dc/elements/1.1/> .
+  docs:foo dc:title "Foo" .
