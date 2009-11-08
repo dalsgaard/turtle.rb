@@ -90,7 +90,13 @@ module Turtle
         when 0
           ":"
         when 1
-          ":#{e.first}"
+          first = e.first
+          case first
+          when Symbol
+            "#{first}:"
+          when String
+            ":#{e.first}"
+          end
         else
           first, last = e
           case first
