@@ -21,3 +21,66 @@ will produce the following result
   @prefix : <http://kimdalsgaard.com/documents/> .
   @prefix dc: <http://purl.org/dc/elements/1.1/> .
   :foo dc:title "Foo" .
+
+=== Nested Predicates
+
+  Turtle.build do
+
+    prefix "http://kimdalsgaard.com/documents/"
+    prefix :dc, "http://purl.org/dc/elements/1.1/"
+
+    subject ["foo"] do
+      predicate [:dc, "title"], "Foo"
+      predicate [:dc, "creator"], "Kim Dalsgaard"
+    end        
+
+  end
+
+results in
+
+  @prefix : <http://kimdalsgaard.com/documents/> .
+  @prefix dc: <http://purl.org/dc/elements/1.1/> .
+  :foo
+    dc:title "Foo" ;
+    dc:creator "Kim Dalsgaard" .
+
+=== Nested Objects
+
+  Turtle.build do
+
+    prefix :foaf, "http://xmlns.com/foaf/0.1/"
+
+    subject -"http://dalsgaardkirk.com#kim", [:foaf, "knows"]  do
+      object -"http://dalsgaardkirk.com#pernille"
+      object -"http://dalsgaardkirk.com#sophus"
+    end
+
+  end
+
+results in
+
+  @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+  <http://dalsgaardkirk.com#kim> foaf:knows
+      <http://dalsgaardkirk.com#pernille> ,
+      <http://dalsgaardkirk.com#sophus> .
+
+=== Blank Nodes
+
+  Turtle.build do
+
+    prefix :foaf, "http://xmlns.com/foaf/0.1/"
+
+    subject _("foo"), a, [:foaf, "Person"]       
+    subject _, a, [:foaf, "Person"]       
+    subject _, a, [:foaf, "Group"]
+    subject :bar, a, [:foaf, "Group"]
+
+  end
+
+results in
+
+  @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+  :foo a foaf:Person .
+  :b0 a foaf:Person .
+  :b1 a foaf:Group .
+  :bar a foaf:Group .

@@ -121,24 +121,34 @@ module Turtle
       when Array
         case e.size
         when 0
-          ":"
+          "<>"
         when 1
           first = e.first
           case first
           when :blank, :_
-            resolve blank
+            ":"
           when Symbol
             "#{first}:"
           when String
-            ":#{e.first}"
+            "<#{e.first}>"
           end
         else
           first, last = e
           case first
           when :blank, :_
-            "_:#{last}"
+            case last
+            when :blank, :_
+              ":"
+            else
+              ":#{last}"
+            end
           when Symbol
-            "#{first}:#{last}"
+            case last
+            when :blank, :_
+              "#{first}:"
+            else
+              "#{first}:#{last}"
+            end
           when String
             "\"#{first}\"^^#{xsd_datatype last}"
           end
