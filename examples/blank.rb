@@ -4,10 +4,11 @@ require 'lib/turtle'
 Turtle.build do
 
   prefix :ex, "http://kimdalsgaard.com/example#"
+  prefix "http://kimdalsgaard.com/example/foo#"
   nl
 
   s [:blank, "foo"], [:ex, "title"], "Foo"
-  s [:_, "bar"], [:ex, "title"], "Bar"
+  s [:_, "bar"], ["title"], "Bar"
   nl
 
   s blank("foo"), [:ex, "title"], "Foo"

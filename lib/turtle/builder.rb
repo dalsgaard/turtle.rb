@@ -27,6 +27,8 @@ module Turtle
           prefix(:rdfs, "http://www.w3.org/2000/01/rdf-schema#")
         when :owl
           prefix(:owl, "http://www.w3.org/2002/07/owl#")
+        when String
+          @out.puts "@prefix : <#{prefix}> ."          
         end
       end
     end
