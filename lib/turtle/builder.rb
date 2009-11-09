@@ -103,6 +103,10 @@ module Turtle
         :blank
       end
     end
+
+    def a()
+      :a
+    end
       
     def xsd_datatype(datatype)
       if @xsd
