@@ -12,7 +12,7 @@ The following simple document
     prefix "http://kimdalsgaard.com/documents/"
     prefix :dc, "http://purl.org/dc/elements/1.1/"
     
-    subject ["foo"], [:dc, "title"], "Foo"
+    subject [_, "foo"], [:dc, "title"], "Foo"
 
   end
 
