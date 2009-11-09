@@ -50,9 +50,9 @@ results in
 
     prefix :foaf, "http://xmlns.com/foaf/0.1/"
 
-    subject -"http://dalsgaardkirk.com#kim", [:foaf, "knows"]  do
-      object -"http://dalsgaardkirk.com#pernille"
-      object -"http://dalsgaardkirk.com#sophus"
+    subject ["http://dalsgaardkirk.com#kim"], [:foaf, "knows"]  do
+      object ["http://dalsgaardkirk.com#pernille"]
+      object ["http://dalsgaardkirk.com#sophus"]
     end
 
   end
