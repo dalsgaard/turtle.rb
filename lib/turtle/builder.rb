@@ -6,6 +6,7 @@ module Turtle
       @out = out
       @state = :object
       @xsd = nil
+      @blank = 0
     end
 
     def base(uri)
@@ -77,6 +78,14 @@ module Turtle
       @out.print "\n"
     end
 
+    def blank(name=nil)
+      unless name
+        name = "b#{@blank}"
+        @blank += 1
+      end
+      [:blank, name]
+    end
+
     alias s subject
     alias p predicate
     alias o object
@@ -85,6 +94,14 @@ module Turtle
     alias c comment
     alias nl newline
 
+    def _(name=nil)
+      if name
+        blank name
+      else
+        :blank
+      end
+    end
+      
     def xsd_datatype(datatype)
       if @xsd
         "#{@xsd}:#{datatype}"
@@ -102,6 +119,8 @@ module Turtle
         when 1
           first = e.first
           case first
+          when :blank, :_
+            resolve blank
           when Symbol
             "#{first}:"
           when String
@@ -110,14 +129,20 @@ module Turtle
         else
           first, last = e
           case first
+          when :blank, :_
+            "_:#{last}"
           when Symbol
             "#{first}:#{last}"
           when String
             "\"#{first}\"^^#{xsd_datatype last}"
           end
         end
+      when :blank, :_
+        resolve blank
       when :a
         "a"
+      when Symbol
+        resolve blank(e)
       when String
         "\"#{encode(e)}\""
       when Fixnum
