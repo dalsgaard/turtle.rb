@@ -29,7 +29,7 @@ will produce the following result
     prefix "http://kimdalsgaard.com/documents/"
     prefix :dc, "http://purl.org/dc/elements/1.1/"
 
-    subject ["foo"] do
+    subject [_, "foo"] do
       predicate [:dc, "title"], "Foo"
       predicate [:dc, "creator"], "Kim Dalsgaard"
     end        
