@@ -1,3 +1,5 @@
+# To be run from the project folder - 'ruby examples/blank.rb' 
+
 $:.unshift('lib')
 require 'lib/turtle'
 
