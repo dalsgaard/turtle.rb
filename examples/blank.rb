@@ -7,16 +7,8 @@ Turtle.build do
   prefix "http://kimdalsgaard.com/example/foo#"
   nl
 
-  s [:blank, "foo"], [:ex, "title"], "Foo"
-  s [:_, "bar"], ["title"], "Bar"
-  nl
-
   s blank("foo"), [:ex, "title"], "Foo"
   s blank, [:ex, "title"], "Bar"
-  nl
-
-  s [:blank], [:ex, "title"], "Foo"
-  s [:_], [:ex, "title"], "Bar"
   nl
 
   s :blank, [:ex, "title"], "Foo"
@@ -24,8 +16,6 @@ Turtle.build do
   nl
 
   s _, [:ex, "title"], "Foo"
-  s [_], [:ex, "title"], "Bar"
-  s [_, "baz"], [:ex, "title"], "Baz"
   s _("foo"), [:ex, "title"], "Foo"
   nl
 

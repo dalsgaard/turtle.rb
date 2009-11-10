@@ -1,5 +1,17 @@
 module Turtle
 
+  class BlankNode
+
+    def initialize(name)
+      @name = name
+    end
+
+    def to_s()
+      "_:#{@name}"
+    end
+
+  end
+
   class Builder
     
     def initialize(out)
@@ -15,10 +27,17 @@ module Turtle
 
     def prefix(prefix, namespace=nil)
       if namespace
-        @out.puts "@prefix #{prefix}: <#{namespace}> ."
-        @xsd = prefix if namespace == "http://www.w3.org/2001/XMLSchema#"
+        case prefix
+        when :blank, :_
+          @out.puts "@prefix : <#{namespace}> ."          
+        else
+          @out.puts "@prefix #{prefix}: <#{namespace}> ."
+          @xsd = prefix if namespace == "http://www.w3.org/2001/XMLSchema#"
+        end
       else
         case prefix
+        when :blank, :_
+          @out.puts "@prefix : <#{namespace}> ."          
         when :xsd
           prefix(:xsd, "http://www.w3.org/2001/XMLSchema#")
         when :rdf
@@ -85,7 +104,7 @@ module Turtle
         name = "b#{@blank}"
         @blank += 1
       end
-      [:blank, name]
+      BlankNode.new name
     end
 
     alias s subject
@@ -157,6 +176,8 @@ module Turtle
         resolve blank
       when :a
         "a"
+      when BlankNode
+        e.to_s
       when Symbol
         resolve blank(e)
       when String
