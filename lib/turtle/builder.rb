@@ -19,6 +19,7 @@ module Turtle
       @state = :object
       @xsd = nil
       @blank = 0
+      @indent = 0
     end
 
     def base(uri)
@@ -52,8 +53,8 @@ module Turtle
       end
     end
 
-    def subject(s, p=nil, o=nil)
-      @out.print "#{resolve s}"
+    def subject(s, p=nil, o=nil, &block)
+      @out.print "#{indent}#{resolve s}"
       if p
         @out.print " #{resolve p}"
         if o
@@ -65,34 +66,34 @@ module Turtle
       else
         @state = :subject
       end
-      yield if block_given?
+      indent &block
       @out.puts " ."
     end
 
-    def predicate(p, o=nil)
+    def predicate(p, o=nil, &block)
       if @state == :object 
         @out.print " ;"
       end
-      @out.print "\n  #{resolve p}"
+      @out.print "\n#{indent}#{resolve p}"
       if o
         @out.print " #{resolve o}"
         @state = :object
       else
         @state = :predicate
       end
-      yield if block_given?
+      indent &block
     end
 
     def object(o)
       if @state == :object
         @out.print " ,"
       end
-      @out.print "\n    #{resolve o}"
+      @out.print "\n#{indent}#{resolve o}"
       @state = :object
     end
 
     def comment(text)
-      @out.print "# #{text}\n"
+      @out.print "#{indent}# #{text}\n"
     end
 
     def newline
@@ -204,6 +205,16 @@ module Turtle
         end
       end
       a.join
+    end
+
+    def indent()
+      if block_given?
+        @indent += 1
+        yield
+        @indent -= 1
+      else
+        "  " * @indent
+      end
     end
 
     def self.build(out=STDOUT, extension=nil, &block)
