@@ -1,6 +1,38 @@
 module Turtle
 
   class Parser
+
+    class Uri
+      attr_reader :uri
+      
+      def initialize(uri)
+        @uri = uri
+      end
+
+      def +(rhs)
+        Uri.new @uri + rhs
+      end
+
+      def to_s
+        "<#{@uri}>"
+      end
+
+    end
+
+    class Literal
+
+      def initialize(literal, type=nil)
+        @literal = literal
+        @type = type
+      end
+
+      def to_s()
+        type = @type ? "^^#{@type}" : ""
+        "\"#{@literal}\"#{type}"
+      end
+
+    end
+
     attr_reader :triples
 
     UriExp = "<[^>]*>|[\\w-]*:[\\w-]*"
@@ -11,7 +43,7 @@ module Turtle
     ObjectExp = /^(#{ElemExp})\s*(\.|;|,)/
 
     def initialize(base="")
-      @base = base
+      @base = Uri.new(base)
       @prefixes = {}
       @triples = []
     end
@@ -67,15 +99,18 @@ module Turtle
     end
 
     def resolve(s)
+      
       case s
       when /^<(http:.*)>$/
-        $1
+        Uri.new $1
       when /^<(.*)>$/
         @base + $1
       when /^([\w-]*):([\w-]*)$/
-        "#{@prefixes[$1]}#{$2}"
-      when /^(\"[^\"]*\")\^\^([\w-]*:[\w-]*)$/
-        "#{$1}^^<#{resolve($2)}>"
+        @prefixes[$1] + $2
+      when /^\"([^\"]*)\"\^\^([\w-]*:[\w-]*)$/
+        Literal.new $1, resolve($2)
+      when /^\"([^\"]*)\"$/
+        Literal.new $1
       else
         s
       end
