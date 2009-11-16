@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.description = ""
   spec.author = "Kim Dalsgaard"
   spec.email = "kim@kimdalsgaard.com"
+  spec.homepage = "http://github.com/dalsgaard/turtle.rb"
   
   spec.files = FileList['lib/**/*.rb']
   spec.require_paths = ['lib']
