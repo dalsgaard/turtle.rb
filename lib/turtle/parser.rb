@@ -17,6 +17,11 @@ module Turtle
         "<#{@uri}>"
       end
 
+      def self.get(uri)
+        @uris ||= {}
+        instance = @uris[uri]
+      end
+
     end
 
     class Literal
