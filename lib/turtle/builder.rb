@@ -14,7 +14,7 @@ module Turtle
 
   class Builder
     
-    def initialize(out)
+    def initialize(out=STDOUT)
       @out = out
       @state = :object
       @xsd = nil
