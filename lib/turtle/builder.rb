@@ -219,7 +219,10 @@ module Turtle
 
     def self.build(out=STDOUT, extension=nil, &block)
       builder = new out
-      builder.extend ext if extension
+      if extension
+        builder.extend extension
+        builder.init if builder.respond_to? :init
+      end
       builder.instance_eval &block
     end
 
