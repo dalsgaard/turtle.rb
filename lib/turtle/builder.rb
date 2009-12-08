@@ -217,9 +217,9 @@ module Turtle
       end
     end
 
-    def self.build(out=STDOUT, extension=nil, &block)
+    def self.build(out=STDOUT, *extensions, &block)
       builder = new out
-      if extension
+      extensions.each do |extension|
         builder.extend extension
         builder.init if builder.respond_to? :init
       end
