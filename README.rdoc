@@ -80,7 +80,7 @@ results in
 results in
 
   @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-  :foo a foaf:Person .
-  :b0 a foaf:Person .
-  :b1 a foaf:Group .
-  :bar a foaf:Group .
+  _:foo a foaf:Person .
+  _:b0 a foaf:Person .
+  _:b1 a foaf:Group .
+  _:bar a foaf:Group .
