@@ -28,17 +28,10 @@ module Turtle
 
     def prefix(prefix, namespace=nil)
       if namespace
-        case prefix
-        when :blank, :_
-          @out.puts "@prefix : <#{namespace}> ."          
-        else
-          @out.puts "@prefix #{prefix}: <#{namespace}> ."
-          @xsd = prefix if namespace == "http://www.w3.org/2001/XMLSchema#"
-        end
+        @out.puts "@prefix #{prefix}: <#{namespace}> ."
+        @xsd = prefix if namespace == "http://www.w3.org/2001/XMLSchema#"
       else
         case prefix
-        when :blank, :_
-          @out.puts "@prefix : <#{namespace}> ."          
         when :xsd
           prefix(:xsd, "http://www.w3.org/2001/XMLSchema#")
         when :rdf
@@ -53,43 +46,58 @@ module Turtle
       end
     end
 
-    def subject(s, p=nil, o=nil, &block)
+    def subject(s, p=nil, *os, &block)
       @out.print "#{indent}#{resolve s}"
       if p
         @out.print " #{resolve p}"
-        if o
-          @out.print " #{resolve o}"
+        case os.size
+        when 0
+          @state = :predicate
+          indent &block
+        when 1
+          @out.print " #{resolve os.first}"
           @state = :object
         else
-          @state = :predicate
+          indent do
+            @state = :predicate
+            object *os
+          end
         end
       else
         @state = :subject
+        indent &block
       end
-      indent &block
       @out.puts " ."
     end
 
-    def predicate(p, o=nil, &block)
+    def predicate(p, *os, &block)
       if @state == :object 
         @out.print " ;"
       end
       @out.print "\n#{indent}#{resolve p}"
-      if o
-        @out.print " #{resolve o}"
+      case os.size
+      when 0
+        @state = :predicate
+        indent &block
+      when 1
+        @out.print " #{resolve os.first}"
         @state = :object
       else
         @state = :predicate
+        indent do
+          object *os
+        end        
       end
-      indent &block
     end
 
-    def object(o)
-      if @state == :object
-        @out.print " ,"
+    def object(*os)
+      os.each do |o| 
+        if @state == :object
+          @out.print " ,"
+        end
+        @out.print "\n#{indent}#{resolve o}"
+        @state = :object
       end
-      @out.print "\n#{indent}#{resolve o}"
-      @state = :object
     end
 
     def comment(text)
@@ -120,7 +128,7 @@ module Turtle
       if name
         blank name
       else
-        :blank
+        :_
       end
     end
 
@@ -210,7 +218,7 @@ module Turtle
     def indent()
       if block_given?
         @indent += 1
-        yield
+        yield self
         @indent -= 1
       else
         "  " * @indent
