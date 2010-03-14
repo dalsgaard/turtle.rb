@@ -58,7 +58,7 @@ describe Builder do
   end
 
   it 'should resolve ["string1", "string2"] as "string1"^^xsd:string2' do
-    Builder.build do
+    Builder.build @out do
       prefix :xsd
       resolve(["Foo", "string"]).should == "\"Foo\"^^xsd:string"
     end
