@@ -1,0 +1,10 @@
+prefix "http://xmlns.com/foaf/0.1/"
+
+s ["http://kimdalsgaard.com#me"] do
+  p a, [_, "Person"]
+  p [_, "name"], "Kim Dalsgaard Kirk"
+  p [_, "nick"], "dalsgaard"
+  p [_, "title"], "Mr."
+  p [_, "homepage"], "http://kimdalsgaard.com"
+  p [_, "mbox"], "mailto:kim@kimdalsgaard.com"
+end
