@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+require 'turtle'
+require 'turtle/trig'
+
+if fn = ARGV[0]
+  File.open fn do |file|
+    input = file.read
+    builder = Turtle::Builder.new(STDOUT)
+    builder.instance_eval input
+  end
+else
+  puts "usage: turtle <file>"
+end
