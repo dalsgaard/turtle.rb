@@ -45,7 +45,12 @@ module Turtle
               "#{first}:#{last}"
             end
           when String
-            "\"#{first}\"^^#{xsd_datatype last}"
+            case last
+            when String
+              "\"#{first}\"^^#{xsd_datatype last}"
+            when Array
+              "\"#{first}\"^^<#{last.first}>"
+            end
           end
         end
       when :blank, :_

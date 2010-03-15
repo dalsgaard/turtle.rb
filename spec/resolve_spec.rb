@@ -64,6 +64,13 @@ describe Builder do
     end
   end
 
+  it 'should resolve ["string", ["uri"]] as "string"^^<uri>' do
+    Builder.build @out do
+      prefix :xsd
+      resolve(["Foo", ["uri"]]).should == "\"Foo\"^^<uri>"
+    end
+  end
+
   it 'should resolve :_ as a blank node' do
     Builder.build do
       resolve(_).should =~ /_:\w+/
